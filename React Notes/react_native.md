@@ -422,3 +422,60 @@ render(){
   )
 }
 ```
+
+## Why prevState is needed?
+
+diyelim ki halihazırda state de bulunan bir değişkeni updatelemek istiyoruz. Bunu iki şekilde yapabiliriz : 
+
+```js
+  toggleContact = () => {
+    1.kullanım -> this.setState({showContacts: !this.state.showContacts})
+    
+    2.kullanım -> this.setState(prevState => ({showContacts: !prevState.showContacts}))
+  }
+```
+  
+  burda tercih edilmesi gereken prevState kullanımıdır. çünkü diğer kullanımda şöyle sıkıntılar olabilir : 
+  setstate async olduğundan örneğin bu fonksiyonu (toggleContact) 2 defa üst üste çağırdığımızda, True olan showContacts değişkeninin tekrar True olmasını bekleriz. fakat bu async call sırayla bu değişkene okuma  ve sırayla yazma yaparlarsa bu değişken False olur.
+
+
+  ## React merges states when setState is invoked
+  setstate yapıp yeni bir state return ettiğimizde react bunu direk gidip yeni state yapmaz, eski state ile merge eder.
+
+  toggle kullanımı bu sayede çalışır. 
+
+  ### Toggle kullanımı : 
+  örneğin initial state imiz bu olsun : 
+  ```js
+  this.state = {
+    isLoading: false,
+    data: [1, 2, 3],
+    error: null
+  };
+  ```
+  ardından isLoading in durumunu true yapmak istiyoruz:
+
+  bunu şöyle yapabiliriz:
+  ```js
+  this.setState((prevState)=>{...prevState, isLoading:true})
+  ```
+  fakat illa setState den döndüreceğimiz yeni objenin tüm state keylerini ve valularını içermesine gerek yoktur. sadece değiştirmek istediğimiz değeri değiştirip bunu döndürebiliriz.
+
+  yani daha temiz ve kolay yazımı şu şekilde olur:
+
+  ```js
+  this.setState({ isLoading:true });
+  ```
+  bunun çalışmasının sebebi, react ztn bunu eski state ile mergelerken diğer keyleri eklemiş olacak.
+
+
+---
+
+şu kullanımın bir numarası yok : 
+```js
+this.setState(()=>({isLoading:true}))
+```
+
+yine react bundan dönen değeri {isLoading:true} alıp mevcut state ile mergeleyecek.
+
+
