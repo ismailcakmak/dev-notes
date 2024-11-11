@@ -582,6 +582,9 @@ Expo also has its own navigation solution. But I use react-navigation.
 
 In react navigation, navigation container includes navigator and navigator itself points to some screen. navigation happens btw those screens connected to navigator.
 
+
+More about navigation : https://www.reactnative.express/app/navigation/navigating_and_routes
+
 ### we can pass some object to the screen we are navigation to : 
 ```js
 <Button 
