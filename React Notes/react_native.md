@@ -479,3 +479,182 @@ this.setState(()=>({isLoading:true}))
 yine react bundan dönen değeri {isLoading:true} alıp mevcut state ile mergeleyecek.
 
 
+
+## Component Life Cycle
+
+### componentDidUpdate()
+bazen bunda state update ettiğimizde, bu da tekrar önce render ve sonra componentDidUpdate çağırdığından
+sonsuz call stack hatası alırız. Bunu engellemek için componentDidUpdate içinde prevstate ile şuanki state aynı mı 
+farklı mı kontrolü yapabiliriz:
+
+```js
+
+  componentDidUpdate(prevProps, prevState){
+    if (prevState.name !== this.state.name || prevState.phone !== this.state.phone) {
+      -> en son state'i biz değiştirdiğimiz için gerçekleşen update
+    }
+    else{
+      -> state ler aynı
+    }
+  }
+```
+
+
+## KeyboardAvoidingView
+
+Bazen ekrandaki şeyler çok olduğunda, klavyeyi açtığımızda klavye yazmak istediğimiz text_input componentini kapatabilir.
+Bunun önüne geçmek için, Bu text inputları içeren büyük view yerine keyboardavoidingview kullanırız. 
+Bunun aldığı bir parametre vardır : `behaviour`, ve verilebilecek 3 değer vardır:
+
+padding: Adjusts the bottom padding of the view to avoid the keyboard.
+position: Directly changes the position of the KeyboardAvoidingView.
+height: Reduces the height of the view to prevent overlapping.
+
+The best method here is to try all of them and look which one works best for your case.
+
+before : 
+```js
+<View>
+  <TextInput
+    style = {styles.input}
+    placeholder="Name"
+    value = {this.state.name}
+    onChangeText={this.onChangeName}
+  />
+  <TextInput
+    style = {styles.input}
+    placeholder='Number'
+    value = {this.state.phone}
+    onChangeText={this.onChangeNumber}
+    keyboardType='numeric'
+  />
+  <Button 
+    style = {styles.button}
+    title = "Submit" 
+    disabled = {!this.state.isFormValid}
+    onPress={()=>{this.props.handleSubmit(this.state)}}
+    />
+</View>
+```
+
+after :
+```js
+<KeyboardAvoidingView behavior="padding" style={styles.container}>
+  <TextInput
+    style={styles.input}
+    value={this.state.name}
+    onChangeText={this.getHandler('name')}
+    placeholder="Name"
+  />
+  <TextInput
+    keyboardType="numeric"
+    style={styles.input}
+    value={this.state.phone}
+    onChangeText={this.getHandler('phone')}
+    placeholder="Phone"
+  />
+  <Button title="Submit" onPress={this.handleSubmit} disabled={!this.state.isFormValid} />
+</KeyboardAvoidingView>
+```
+
+
+
+## Error and Warnings
+
+nasıl ki console.log() yapabiliyorsak, console.error() ve console.warning() de yapabiliriz.
+Bunlar full page error ve warning verir.
+
+## Navigation
+
+There is no one way of navigation. React Native originally included a built-in navigation API, but it was eventually removed, in favor of a semi-official library called react-navigation.
+
+react-navigation'ın kendine ait bir webpage'i olmasının da sebebi bu.
+
+There are a few aspects of navigation which make it challenging in React Native: 
+
+  - Navigation works differently on each native platform. iOS uses view controllers, while android uses activities. These platform-specific APIs work differently technically and appear differently to the user. React Native navigation libraries try to support the look-and-feel of each platform, while still providing a single consistent JavaScript API.
+  - Native navigation APIs don't correspond with "views". React Native components like View, Text, and Image, roughly map to an underlying native "view", but there isn't really an equivalent for some of the navigation APIs. There isn't always a clear way to expose these APIs to JavaScript.
+  - Navigation on mobile is stateful. On the web, navigation is typically stateless, where a url (i.e. route) takes a user to a single screen/page. On mobile, the history of the user's navigation state is persisted in the application so that the user can go back to previous screens - a stack of screens can even include the same screen multiple times.
+
+Due to these challenges, there isn't a single best way to implement navigation, so it was removed from the core React Native package.
+
+Expo also has its own navigation solution. But I use react-navigation.
+
+In react navigation, navigation container includes navigator and navigator itself points to some screen. navigation happens btw those screens connected to navigator.
+
+### we can pass some object to the screen we are navigation to : 
+```js
+<Button 
+  title="Add New Contact" 
+  onPress={() => this.props.navigation.push('AddContactPage', { handleSubmit: this.handleSubmit })}
+/>
+```
+
+in the AddContactPage screen, this object come inside route object's params inside the props.
+Have a look at the props of AddContactPage when navigated :
+![alt text](image.png)
+
+so we access it throught :
+`this.props.route.params.handleSubmit()`
+
+dolayısıyla her bunu kullanmak istediğimizde bu kadar uzun yazmamak için, contructorda bunu bir field a verebiliriz : 
+
+```js
+class AddContactPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            // your state initialization
+        };
+        this.handleSubmit = this.props.navigation.getParam('handleSubmit', () => {});
+    }
+```
+
+### how to go back : 
+![alt text](image-1.png)
+
+We can use goBack() function:
+```js
+this.props.navigation.goBack()
+```
+
+
+## arrow function 
+
+Lets look at those 3 examples :
+
+First :
+```js
+<Button 
+  title="Add New Contact" 
+  onPress={() => this.props.navigation.push('AddContactPage', { handleSubmit: this.handleSubmit })}
+/>
+```
+
+Second :
+```js
+<Button 
+  title="Add New Contact" 
+  onPress={() => { 
+    this.props.navigation.push('AddContactPage', { handleSubmit: this.handleSubmit }) 
+  }}
+/>
+```
+
+Third :
+```js
+<Button 
+  title="Add New Contact" 
+  onPress={this.props.navigation.push('AddContactPage', { handleSubmit: this.handleSubmit })}
+/>
+
+```
+
+
+First and second are not immediately invoked when button is being rendered. But the third one  would immediately invoke this.navigation.push when the component (button) renders, rather than when the button is pressed. This is not the behavior you want.
+
+But what is the diff btw first and second:
+First and second creates two functions. but when you dont use {} after =>, it will directly return it (but since before returning, the it is being evaluated means invoked, it will still be invoked.). But second one doesnt return anything out of that function (if there is no return statement as in our example) it just invoke it.
+
+So for our example which one we should use? First one is best in that case since it is simpler than second.
+
