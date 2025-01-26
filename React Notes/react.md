@@ -4,6 +4,17 @@ You can use pure JS to create and mainpulate the DOM. but it is very imperative 
 HTML is a bit more declerative
 React is very declerative way
 
+#### Ceating react project
+
+REACT:
+
+npx create-react-app my-todo-app
+npm start
+
+REACT NATIVE:
+
+
+
 ### Writing React
 
 JSX
