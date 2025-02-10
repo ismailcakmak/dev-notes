@@ -1,0 +1,26 @@
+.form-row {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+
+.form-row input[type="text"],
+.form-row input[type="email"] {
+    background-color: #FFFFFF;
+    border-radius: 3px;
+    padding: 7px;
+}
+
+
+input:valid {
+    outline: 2px solid green;
+}
+
+input:invalid {
+    outline : 1px solid red;
+    background-image: linear-gradient(to right, pink, lightgreen);
+}

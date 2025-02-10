@@ -1,0 +1,13 @@
+article p:first-child {
+    font-weight: bold;
+}
+
+
+article p::first-line {
+    color: tomato;
+}
+
+
+article p:last-child::after {
+    content: '😎';
+}
