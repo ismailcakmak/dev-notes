@@ -14,7 +14,6 @@ npm start
 REACT NATIVE:
 
 
-
 ### Writing React
 
 JSX

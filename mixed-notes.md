@@ -148,3 +148,70 @@ therefore use this :
 ```js
 console.log("props", props)
 ```
+
+
+## naming conventions 
+
+In JavaScript/React applications:
+- Use **camelCase** for:
+  - Files containing regular functions/modules
+  - Variables
+  - Functions
+- Use **PascalCase** for:
+  - React components
+  - Class names
+
+
+  ## REST
+  In REST terminology, we refer to individual data objects, such as the notes in our application, as resources. Every resource has a unique address associated with it - its URL. The notes URL, on the other hand, would point to a resource collection containing all the notes.
+
+  Common HTTP methods and their typical uses in a REST API:
+
+  GET /api/persons - Get all persons
+  GET /api/persons/:id - Get a single person
+  POST /api/persons - Create a new person
+  PUT /api/persons/:id - Update a person
+  DELETE /api/persons/:id - Delete a person
+
+
+  ## printing objects in console
+
+  Lets say we deleted a person and want to inform user
+  which person object is deleted. therefore we want to print deleted person Object to the console : 
+
+  so we have 3 options :
+
+  ```js
+  console.log("Deleted Person : ", deletedPerson);
+  console.log("Deleted Person : " + deletedPerson);
+  console.log(`Deleted Person : ${deletedPerson}`);
+  ```
+
+  Only  one of them is logs a real informative message : 
+
+  ![alt text](image.png)
+
+
+  Therefore use first option, seperating with comma.
+
+
+  Or you can do this as well althout not recommended since we dont really know what is this object when we only look console :
+
+  ```js
+  console.log(deletedItem);
+  // {id: '52a7', name: 'feafa', number: '343'}
+  ```
+
+## window.confirm()
+
+https://developer.mozilla.org/en-US/docs/Web/API/Window/confirm
+
+
+şu şekilde kullanılır : 
+
+```js
+const shouldUpdate = window.confirm(`${currentPerson.name} is already added to phonebook, replace the old number with the new one?`);
+
+```
+
+çıkan kutuda kullanıcı "ok" a basarsa, shouldUpdate true olur, "cancel" a basarsa false olur.
