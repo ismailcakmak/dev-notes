@@ -215,3 +215,42 @@ const shouldUpdate = window.confirm(`${currentPerson.name} is already added to p
 ```
 
 çıkan kutuda kullanıcı "ok" a basarsa, shouldUpdate true olur, "cancel" a basarsa false olur.
+
+
+
+## useRef
+
+bazen componentimizin içinde bir değeri tutmak isteriz fakat bu değeri her render de kaybetmek istemeyiz, fakat bu değer updatelendiğinde render etmek de istemeyiz veya bu değer zaten initialization haricinde updatelennmeyecektir, bu durumda state var yapmak istemiyoruz çünkü overkill, normal değişken yaparsak da bu değeri her render da kaybedeceğiz. global değişken de koymak istemiyoruz.
+
+bu yüzden useRef hook kullanırız, çünkü : 
+
+It persists between renders
+It's more "React-like" than module-level variables
+It doesn't trigger re-renders when changed
+It keeps the data scoped to the component
+It's cleaner than using global variables
+
+
+```js
+import { useRef, useEffect, useState } from 'react'
+
+function App() {
+  const [filter, setFilter] = useState("");
+  const countriesRef = useRef([]);
+  
+  useEffect(() => {
+    countryService
+      .getAll()
+      .then((countries) => {
+        countriesRef.current = countries;
+      });
+  }, []);
+
+  return (
+    <div>
+      find counties <input type="text" value={filter} onChange={onFilterChange} />
+      <CountryCatalog allCountriesList={countriesRef.current} filter={filter} />
+    </div>
+  );
+}
+```
