@@ -1,0 +1,9 @@
+{
+  "cssTheme": "Obsidian Nord",
+  "theme": "obsidian",
+  "accentColor": "#4f41b9",
+  "enabledCssSnippets": [
+    "colored-headings"
+  ],
+  "baseFontSize": 18
+}
