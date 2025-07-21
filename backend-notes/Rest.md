@@ -23,3 +23,13 @@ And those are the specific http requests to satisfy some certain operation on re
 |notes/10|DELETE|removes the identified resource|
 |notes/10|PUT|replaces the entire identified resource with the request data|
 |notes/10|PATCH|replaces a part of the identified resource with the request data|
+
+
+## Common PAtterns
+GET: Read data
+POST: Create new resources (server assigns ID)
+PUT: Create/replace entire resource (client specifies location)
+PATCH: Update parts of a resource
+DELETE: Remove a resource
+HEAD: Check resource metadata
+OPTIONS: Discover available methods
